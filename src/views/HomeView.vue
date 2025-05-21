@@ -14,12 +14,10 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 
-// VeeValidate
 import { useForm } from 'vee-validate'
 import { z } from 'zod'
 import { toTypedSchema } from '@vee-validate/zod'
 
-// Form UI Components
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form'
 
 const schema = z.object({
@@ -86,10 +84,6 @@ async function getData() {
 }
 
 watch([page, pageSize], getData, { immediate: true })
-
-// onMounted(async () => {
-//   data.value = await getData()
-// })
 </script>
 
 <template>
