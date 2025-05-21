@@ -100,9 +100,12 @@ const hasData = computed(() => props.data?.length > 0)
             v-for="row in table.getRowModel().rows"
             :key="row.id"
             :data-state="row.getIsSelected() ? 'selected' : undefined"
+            class="hover:bg-gray-50 cursor-pointer"
           >
             <TableCell v-for="cell in row.getVisibleCells()" :key="cell.id">
-              <FlexRender :render="cell.column.columnDef.cell" :props="cell.getContext()" />
+              <RouterLink :to="`/bills/${row.original.id}`" class="block w-full h-full">
+                <FlexRender :render="cell.column.columnDef.cell" :props="cell.getContext()" />
+              </RouterLink>
             </TableCell>
           </TableRow>
         </template>

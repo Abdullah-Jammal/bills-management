@@ -10,13 +10,13 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
+import { RouterLink } from 'vue-router'
 
 const items = [
-  { title: 'Home', url: '#', icon: Home },
-  { title: 'About', url: '#', icon: Store },
+  { title: 'Home', url: '/', icon: Home },
+  { title: 'About', url: '/about', icon: Store },
 ]
 </script>
-
 <template>
   <Sidebar>
     <SidebarContent>
@@ -26,10 +26,10 @@ const items = [
           <SidebarMenu>
             <SidebarMenuItem v-for="item in items" :key="item.title">
               <SidebarMenuButton asChild>
-                <a :href="item.url">
+                <RouterLink :to="item.url" class="flex items-center gap-2">
                   <component :is="item.icon" />
                   <span>{{ item.title }}</span>
-                </a>
+                </RouterLink>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
