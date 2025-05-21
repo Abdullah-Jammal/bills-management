@@ -1,26 +1,34 @@
 <script setup lang="js">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { useAuthStore } from '@/stores/auth'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import axios from 'axios'
 
 const router = useRouter()
+const auth = useAuthStore()
 const username = ref('')
 const password = ref('')
 
 async function login() {
-  const fakeToken = 'myAccessToken123'
+  try {
+    const res = await axios.post('http://localhost:3001/login', {
+      email: username.value,
+      password: password.value,
+    })
 
-  localStorage.setItem('accessToken', fakeToken)
-  router.push('/')
+    if (res.data.accessToken) {
+      auth.login(res.data)
+      router.push('/')
+    } else {
+      alert('Invalid login')
+    }
+  } catch (err) {
+    console.error(err)
+    alert('Login failed')
+  }
 }
 </script>
 <template>

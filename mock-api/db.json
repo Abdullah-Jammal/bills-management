@@ -1,0 +1,58 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "email": "admin@example.com",
+      "password": "admin123"
+    },
+    {
+      "email": "admin2@example.com",
+      "password": "$2a$10$M3e5TUkrv6ZnKgfAk5OEYOC45Q1HZKkPXncOEJA8k5Ev6mCwWwP0a",
+      "id": 2
+    }
+  ],
+  "bills": [
+    {
+      "title": "new bill",
+      "amount": 250,
+      "dueDate": "2025-05-22",
+      "id": 2
+    },
+    {
+      "title": "sofa bill",
+      "amount": 50,
+      "dueDate": "2025-05-11",
+      "id": 3
+    },
+    {
+      "title": "car bill",
+      "amount": 45000,
+      "dueDate": "2025-05-30",
+      "id": 4
+    },
+    {
+      "title": "computer bill",
+      "amount": 1500,
+      "dueDate": "2025-05-18",
+      "id": 5
+    },
+    {
+      "title": "table bill",
+      "amount": 20,
+      "dueDate": "2025-05-31",
+      "id": 6
+    },
+    {
+      "title": "laptop bill",
+      "amount": 700,
+      "dueDate": "2025-05-28",
+      "id": 7
+    },
+    {
+      "title": "hayder bill",
+      "amount": 1,
+      "dueDate": "2025-05-21",
+      "id": 8
+    }
+  ]
+}
