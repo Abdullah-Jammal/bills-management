@@ -18,6 +18,7 @@ import {
 import { Button } from '@/components/ui/button'
 import UpdateBillDialog from '../form/UpdateBillDialog.vue'
 import axios from 'axios'
+import { ArrowBigLeft, ArrowBigRight } from 'lucide-vue-next'
 
 const props = defineProps({
   data: Array,
@@ -71,6 +72,37 @@ watch(
     }))
   },
 )
+
+const paginationRange = computed(() => {
+  const total = props.pageCount
+  const current = props.page
+  const range = []
+
+  if (total <= 7) {
+    for (let i = 1; i <= total; i++) range.push(i)
+  } else {
+    const showLeftDots = current > 4
+    const showRightDots = current < total - 3
+
+    if (!showLeftDots && showRightDots) {
+      for (let i = 1; i <= 5; i++) range.push(i)
+      range.push('...')
+      range.push(total)
+    } else if (showLeftDots && !showRightDots) {
+      range.push(1)
+      range.push('...')
+      for (let i = total - 4; i <= total; i++) range.push(i)
+    } else {
+      range.push(1)
+      range.push('...')
+      for (let i = current - 1; i <= current + 1; i++) range.push(i)
+      range.push('...')
+      range.push(total)
+    }
+  }
+
+  return range
+})
 
 const hasData = computed(() => props.data?.length > 0)
 </script>
@@ -134,22 +166,42 @@ const hasData = computed(() => props.data?.length > 0)
       </TableBody>
     </Table>
 
-    <div class="flex items-center justify-end py-4 space-x-2">
+    <div class="flex items-center justify-center py-4 space-x-2 mr-10 mt-6">
       <Button
         variant="outline"
         size="sm"
         :disabled="props.page <= 1"
+        class="border-orange-500 text-orange-500 hover:bg-orange-50"
         @click="emit('update:page', props.page - 1)"
       >
-        Previous
+        <ArrowBigLeft />
       </Button>
+
+      <template v-for="i in paginationRange" :key="i">
+        <span v-if="i === '...'">...</span>
+        <Button
+          v-else
+          variant="outline"
+          size="sm"
+          @click="emit('update:page', i)"
+          :class="[
+            i === props.page
+              ? 'bg-orange-500 text-white border-orange-500'
+              : 'border-orange-500 text-orange-500 hover:bg-orange-50',
+          ]"
+        >
+          {{ i }}
+        </Button>
+      </template>
+
       <Button
         variant="outline"
         size="sm"
         :disabled="props.page >= props.pageCount"
+        class="border-orange-500 text-orange-500 hover:bg-orange-50"
         @click="emit('update:page', props.page + 1)"
       >
-        Next
+        <ArrowBigRight />
       </Button>
     </div>
   </div>

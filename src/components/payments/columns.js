@@ -15,9 +15,23 @@ export function createColumns(UpdateBillDialog, handleDelete, handleSave) {
       cell: ({ row }) => h('div', { class: 'text-center' }, row.getValue('receiver')),
     },
     {
-      accessorKey: 'paid',
+      accessorKey: 'isPaid',
       header: () => h('div', { class: 'text-center' }, 'Paid Status'),
-      cell: ({ row }) => h('div', { class: 'text-center' }, row.getValue('paid')),
+      cell: ({ row }) => {
+        const isPaid = row.getValue('isPaid')
+        return h(
+          'div',
+          {
+            class: [
+              'text-center font-medium py-1 rounded-xs',
+              isPaid
+                ? 'bg-green-100 text-green-500 border border-green-200'
+                : 'bg-red-100 text-red-500 border border-red-200',
+            ],
+          },
+          isPaid ? 'Paid' : 'Unpaid',
+        )
+      },
     },
     {
       accessorKey: 'amount',
@@ -32,11 +46,6 @@ export function createColumns(UpdateBillDialog, handleDelete, handleSave) {
       },
     },
     {
-      accessorKey: 'status',
-      header: () => h('div', { class: 'text-center' }, 'Bill Status'),
-      cell: ({ row }) => h('div', { class: 'text-center' }, row.getValue('status')),
-    },
-    {
       accessorKey: 'station',
       header: () => h('div', { class: 'text-center' }, 'Station'),
       cell: ({ row }) => h('div', { class: 'text-center' }, row.getValue('station')),
@@ -47,6 +56,25 @@ export function createColumns(UpdateBillDialog, handleDelete, handleSave) {
       cell: ({ row }) => {
         const date = new Date(row.getValue('issuedDate')).toLocaleDateString()
         return h('div', { class: 'text-center' }, date)
+      },
+    },
+    {
+      accessorKey: 'status',
+      header: () => h('div', { class: 'text-center' }, 'Bill Status'),
+      cell: ({ row }) => {
+        const status = row.getValue('status')
+        return h(
+          'div',
+          {
+            class: [
+              'text-center font-medium py-1 rounded-xs px-2',
+              status === 'pending'
+                ? 'bg-yellow-100 text-yellow-600 border border-yellow-300'
+                : 'bg-blue-100 text-blue-600 border border-blue-300',
+            ],
+          },
+          status === 'pending' ? 'Pending' : 'Executed',
+        )
       },
     },
     {

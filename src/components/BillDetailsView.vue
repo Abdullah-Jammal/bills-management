@@ -2,6 +2,7 @@
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import axios from 'axios'
+import DetailItem from '@/components/DetailItem.vue'
 
 const route = useRoute()
 const bill = ref(null)
@@ -22,21 +23,40 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="p-6 max-w-xl mx-auto">
-    <h1 class="text-2xl font-bold mb-4">Bill Details</h1>
+  <div class="p-6 max-w-6xl mx-auto">
+    <h1 class="text-3xl font-bold mb-6 text-gray-800">🧾 Bill Details</h1>
 
     <div v-if="isLoading" class="text-gray-500">Loading...</div>
-    <div v-else-if="isError" class="text-red-500 font-semibold">Failed to load bill details.</div>
+    <div v-else-if="isError" class="text-red-500 font-semibold">
+      ❌ Failed to load bill details.
+    </div>
 
-    <div v-else-if="bill" class="space-y-3 bg-white p-5 rounded shadow">
-      <p><strong>Bill Number:</strong> {{ bill.billNumber || 'N/A' }}</p>
-      <p><strong>Receiver:</strong> {{ bill.receiver || 'N/A' }}</p>
-      <p><strong>Amount:</strong> ${{ bill.amount }}</p>
-      <p><strong>Paid:</strong> {{ bill.paid ? 'Yes' : 'No' }}</p>
-      <p><strong>Status:</strong> {{ bill.status || 'Pending' }}</p>
-      <p><strong>Issuing Date:</strong> {{ bill.issuingDate || 'N/A' }}</p>
-      <p><strong>Execution Date:</strong> {{ bill.executionDate || 'N/A' }}</p>
-      <p><strong>Receiving Station:</strong> {{ bill.station || 'N/A' }}</p>
+    <div
+      v-else-if="bill"
+      class="bg-white rounded-xl shadow-md p-8 space-y-6 border border-gray-200"
+    >
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <DetailItem label="Bill Number" :value="bill.billNumber" />
+        <DetailItem label="Receiver" :value="bill.receiver" />
+        <DetailItem label="Amount" :value="`$${bill.amount}`" />
+
+        <DetailItem
+          label="Status"
+          :value="bill.status"
+          badge
+          :badgeColor="bill.status === 'executed' ? 'bg-blue-500' : 'bg-yellow-500'"
+        />
+        <DetailItem
+          label="Paid"
+          :value="bill.isPaid ? 'Paid' : 'Unpaid'"
+          badge
+          :badgeColor="bill.isPaid ? 'bg-green-500' : 'bg-red-500'"
+        />
+
+        <DetailItem label="Issuing Date" :value="bill.issuedDate" />
+        <DetailItem label="Execution Date" :value="bill.executionDate" />
+        <DetailItem label="Receiving Station" :value="bill.station" />
+      </div>
     </div>
   </div>
 </template>

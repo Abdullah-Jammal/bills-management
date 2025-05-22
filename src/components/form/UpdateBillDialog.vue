@@ -22,9 +22,14 @@ const props = defineProps({
 })
 
 const schema = z.object({
-  title: z.string().min(2, 'Title is too short').max(50),
-  amount: z.coerce.number().min(1, 'Amount is required'),
-  dueDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Invalid date format (YYYY-MM-DD)'),
+  billNumber: z.string().min(1, 'Required'),
+  receiver: z.string().min(1, 'Required'),
+  station: z.string().min(1, 'Required'),
+  amount: z.coerce.number().min(1, 'Must be positive'),
+  issuedDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Invalid issued date'),
+  executionDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Invalid execution date'),
+  status: z.enum(['pending', 'executed']),
+  isPaid: z.coerce.boolean(),
 })
 
 const { handleSubmit, resetForm } = useForm({
@@ -34,9 +39,7 @@ const { handleSubmit, resetForm } = useForm({
 watch(
   () => props.bill,
   (bill) => {
-    if (bill) {
-      resetForm({ values: { ...bill } })
-    }
+    if (bill) resetForm({ values: { ...bill } })
   },
   { immediate: true },
 )
@@ -51,42 +54,82 @@ const onSubmit = handleSubmit(async (values) => {
     <DialogTrigger as-child>
       <Button
         class="bg-blue-100 hover:bg-blue-300 text-blue-500 h-7 text-xs rounded-xs cursor-pointer"
-        ><FolderCog
-      /></Button>
+      >
+        <FolderCog />
+      </Button>
     </DialogTrigger>
     <DialogContent>
       <DialogHeader>
         <DialogTitle>Update Bill</DialogTitle>
-        <DialogDescription>Edit the fields and save.</DialogDescription>
+        <DialogDescription>Edit and save the bill information.</DialogDescription>
       </DialogHeader>
       <form @submit.prevent="onSubmit" class="space-y-4">
-        <FormField v-slot="{ componentField }" name="title">
+        <FormField v-slot="{ componentField }" name="billNumber">
           <FormItem>
-            <FormLabel>Title</FormLabel>
-            <FormControl>
-              <Input type="text" v-bind="componentField" />
-            </FormControl>
+            <FormLabel>Bill Number</FormLabel>
+            <FormControl><Input type="text" v-bind="componentField" /></FormControl>
             <FormMessage />
           </FormItem>
         </FormField>
+
+        <FormField v-slot="{ componentField }" name="receiver">
+          <FormItem>
+            <FormLabel>Receiver</FormLabel>
+            <FormControl><Input type="text" v-bind="componentField" /></FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+
+        <FormField v-slot="{ componentField }" name="station">
+          <FormItem>
+            <FormLabel>Station</FormLabel>
+            <FormControl><Input type="text" v-bind="componentField" /></FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+
         <FormField v-slot="{ componentField }" name="amount">
           <FormItem>
             <FormLabel>Amount</FormLabel>
-            <FormControl>
-              <Input type="number" v-bind="componentField" />
-            </FormControl>
+            <FormControl><Input type="number" v-bind="componentField" /></FormControl>
             <FormMessage />
           </FormItem>
         </FormField>
-        <FormField v-slot="{ componentField }" name="dueDate">
+
+        <FormField v-slot="{ componentField }" name="issuedDate">
           <FormItem>
-            <FormLabel>Due Date</FormLabel>
+            <FormLabel>Issued Date</FormLabel>
+            <FormControl><Input type="date" v-bind="componentField" /></FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+
+        <FormField v-slot="{ componentField }" name="executionDate">
+          <FormItem>
+            <FormLabel>Execution Date</FormLabel>
+            <FormControl><Input type="date" v-bind="componentField" /></FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+
+        <FormField v-slot="{ componentField }" name="status">
+          <FormItem>
+            <FormLabel>Status</FormLabel>
+            <FormControl><Input v-bind="componentField" /></FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+
+        <FormField v-slot="{ componentField }" name="isPaid">
+          <FormItem>
+            <FormLabel>Is Paid?</FormLabel>
             <FormControl>
-              <Input type="date" v-bind="componentField" />
+              <input type="checkbox" v-bind="componentField" />
             </FormControl>
             <FormMessage />
           </FormItem>
         </FormField>
+
         <Button type="submit" class="w-full bg-blue-600">Save Changes</Button>
       </form>
     </DialogContent>
