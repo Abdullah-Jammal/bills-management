@@ -13,7 +13,7 @@ const isLoginPage = route.path === '/login'
   <SidebarProvider>
     <AppSidebar v-if="auth.isLoggedIn" />
     <main class="w-full min-h-screen bg-gray-100">
-      <SidebarTrigger v-if="!isLoginPage" />
+      <SidebarTrigger v-if="auth.isLoggedIn" />
       <router-view />
     </main>
   </SidebarProvider>

@@ -13,46 +13,92 @@
   ],
   "bills": [
     {
-      "title": "new bill",
+      "id": 2,
+      "billNumber": "BILL-002",
+      "receiver": "Receiver 2",
       "amount": 250,
-      "dueDate": "2025-05-22",
-      "id": 2
+      "paid": false,
+      "status": "Pending",
+      "issuedDate": "2025-05-01",
+      "executionDate": "2025-05-22",
+      "station": "Station A"
     },
     {
-      "title": "sofa bill",
-      "amount": 50,
-      "dueDate": "2025-05-11",
-      "id": 3
+      "id": 3,
+      "billNumber": "BILL-003",
+      "receiver": "Receiver 3",
+      "amount": 505,
+      "paid": true,
+      "status": "Approved",
+      "issuedDate": "2025-05-05",
+      "executionDate": "2025-05-11",
+      "station": "Station B"
     },
     {
-      "title": "car bill",
-      "amount": 45000,
-      "dueDate": "2025-05-30",
-      "id": 4
-    },
-    {
-      "title": "computer bill",
+      "id": 5,
+      "billNumber": "BILL-005",
+      "receiver": "Receiver 5",
       "amount": 1500,
-      "dueDate": "2025-05-18",
-      "id": 5
+      "paid": false,
+      "status": "Pending",
+      "issuedDate": "2025-05-07",
+      "executionDate": "2025-05-18",
+      "station": "Station C"
     },
     {
-      "title": "table bill",
+      "id": 6,
+      "billNumber": "BILL-006",
+      "receiver": "Receiver 6",
       "amount": 20,
-      "dueDate": "2025-05-31",
-      "id": 6
+      "paid": true,
+      "status": "Completed",
+      "issuedDate": "2025-05-10",
+      "executionDate": "2025-05-31",
+      "station": "Station A"
     },
     {
-      "title": "laptop bill",
+      "id": 7,
+      "billNumber": "BILL-007",
+      "receiver": "Receiver 7",
       "amount": 700,
-      "dueDate": "2025-05-28",
-      "id": 7
+      "paid": false,
+      "status": "Rejected",
+      "issuedDate": "2025-05-13",
+      "executionDate": "2025-05-28",
+      "station": "Station D"
     },
     {
-      "title": "hayder bill",
+      "id": 8,
+      "billNumber": "BILL-008",
+      "receiver": "Receiver 8",
       "amount": 1,
-      "dueDate": "2025-05-21",
-      "id": 8
+      "paid": true,
+      "status": "Completed",
+      "issuedDate": "2025-05-14",
+      "executionDate": "2025-05-21",
+      "station": "Station E"
+    },
+    {
+      "id": 9,
+      "billNumber": "BILL-009",
+      "receiver": "Receiver 9",
+      "amount": 1000,
+      "paid": false,
+      "status": "In Progress",
+      "issuedDate": "2025-05-15",
+      "executionDate": "2025-05-24",
+      "station": "Station F"
+    },
+    {
+      "id": 10,
+      "billNumber": "BILL-010",
+      "receiver": "Receiver 10",
+      "amount": 11,
+      "paid": true,
+      "status": "Completed",
+      "issuedDate": "2025-05-16",
+      "executionDate": "2025-05-22",
+      "station": "Station A"
     }
   ]
 }

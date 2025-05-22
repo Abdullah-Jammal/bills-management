@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { Home, Store, LogIn, Signpost } from 'lucide-vue-next'
+import { Home, Store } from 'lucide-vue-next'
 import {
   Sidebar,
   SidebarContent,
@@ -10,19 +10,23 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
-import { RouterLink } from 'vue-router'
+import { LogOut } from 'lucide-vue-next'
+import { Button } from './ui/button'
+import { useAuthStore } from '@/stores/auth'
 
 const items = [
   { title: 'Home', url: '/', icon: Home },
   { title: 'About', url: '/about', icon: Store },
 ]
+
+const auth = useAuthStore()
 </script>
 <template>
   <Sidebar>
     <SidebarContent>
       <SidebarGroup>
         <SidebarGroupLabel>Bills Management</SidebarGroupLabel>
-        <SidebarGroupContent>
+        <SidebarGroupContent class="flex flex-col justify-between h-[94vh]">
           <SidebarMenu>
             <SidebarMenuItem v-for="item in items" :key="item.title">
               <SidebarMenuButton asChild>
@@ -33,6 +37,9 @@ const items = [
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
+          <Button class="bg-red-500 cursor-pointer" @click.prevent="auth.logout">
+            <LogOut /> Logout
+          </Button>
         </SidebarGroupContent>
       </SidebarGroup>
     </SidebarContent>

@@ -1,21 +1,30 @@
 <script setup lang="js">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import axios from 'axios'
+import { Label } from '@/components/ui/label'
 
 const router = useRouter()
 const auth = useAuthStore()
-const username = ref('')
+const email = ref('')
 const password = ref('')
+const error = ref('')
+
+const isFormValid = computed(() => email.value.trim() !== '' && password.value.trim() !== '')
 
 async function login() {
+  if (!isFormValid.value) {
+    error.value = 'Please fill in both email and password.'
+    return
+  }
+
   try {
     const res = await axios.post('http://localhost:3001/login', {
-      email: username.value,
+      email: email.value,
       password: password.value,
     })
 
@@ -23,11 +32,11 @@ async function login() {
       auth.login(res.data)
       router.push('/')
     } else {
-      alert('Invalid login')
+      error.value = 'Access token missing.'
     }
   } catch (err) {
     console.error(err)
-    alert('Login failed')
+    error.value = err.response?.data || 'Login failed'
   }
 }
 </script>
@@ -38,16 +47,27 @@ async function login() {
   >
     <Card class="w-[40%]">
       <CardHeader>
-        <CardTitle class="text-2xl font-semibold">Welcome to Bills Management System </CardTitle>
-        <CardDescription class="text-gray-600">
-          Please login with your credentials to securely access and manage your bills
+        <CardTitle class="text-2xl font-semibold text-center"
+          >Welcome to Bills Management System
+        </CardTitle>
+        <CardDescription class="text-gray-600 text-center w-80 mx-auto">
+          Please login with your credentials to securely access and manage bills
         </CardDescription>
       </CardHeader>
       <CardContent>
         <div class="space-y-6">
-          <Input v-model="username" placeholder="Username" />
+          <Label class="mb-[8px]">Email</Label>
+          <Input v-model="email" placeholder="email" />
+          <Label class="mb-[8px]">Password</Label>
           <Input v-model="password" placeholder="Password" type="password" />
-          <Button @click="login" class="w-full bg-orange-500 cursor-pointer"> Login </Button>
+          <div v-if="error" class="text-red-500 text-sm">{{ error }}</div>
+          <Button
+            @click="login"
+            :disabled="!isFormValid"
+            class="w-full bg-orange-500 cursor-pointer disabled:opacity-50"
+          >
+            Login
+          </Button>
         </div>
       </CardContent>
     </Card>

@@ -6,7 +6,7 @@ import {
   getCoreRowModel,
   FlexRender,
 } from '@tanstack/vue-table'
-import { columns } from './columns'
+import { createColumns } from './columns'
 import {
   Table,
   TableBody,
@@ -16,6 +16,8 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
+import UpdateBillDialog from '../form/UpdateBillDialog.vue'
+import axios from 'axios'
 
 const props = defineProps({
   data: Array,
@@ -25,7 +27,16 @@ const props = defineProps({
   isError: Boolean,
 })
 
+async function handleDelete(id) {
+  await axios.delete(`http://localhost:3001/bills/${id}`)
+}
+
+async function handleSave(id, updated) {
+  await axios.put(`http://localhost:3001/bills/${id}`, updated)
+}
+
 const emit = defineEmits(['update:page'])
+const columns = createColumns(UpdateBillDialog, handleDelete, handleSave)
 
 const table = useVueTable({
   get data() {
@@ -89,7 +100,7 @@ const hasData = computed(() => props.data?.length > 0)
 
         <template v-else-if="props.isError">
           <TableRow>
-            <TableCell :colspan="columns.length" class="h-24 text-center text-red-500">
+            <TableCell :colspan="columns.length" class="h-24 text-center text-red-500 font-bold">
               Failed to load data.
             </TableCell>
           </TableRow>
@@ -103,9 +114,14 @@ const hasData = computed(() => props.data?.length > 0)
             class="hover:bg-gray-50 cursor-pointer"
           >
             <TableCell v-for="cell in row.getVisibleCells()" :key="cell.id">
-              <RouterLink :to="`/bills/${row.original.id}`" class="block w-full h-full">
+              <template v-if="cell.column.id !== 'actions'">
+                <RouterLink :to="`/bills/${row.original.id}`" class="block w-full h-full">
+                  <FlexRender :render="cell.column.columnDef.cell" :props="cell.getContext()" />
+                </RouterLink>
+              </template>
+              <template v-else>
                 <FlexRender :render="cell.column.columnDef.cell" :props="cell.getContext()" />
-              </RouterLink>
+              </template>
             </TableCell>
           </TableRow>
         </template>
