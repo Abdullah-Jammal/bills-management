@@ -1,11 +1,16 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import LoginPage from '@/views/LoginPage.vue'
-import PaymentPage from '@/views/PaymentPage.vue'
+import PaymentPage from '@/views/TransactionPage.vue'
 
 const routes = [
   { path: '/', name: 'home', component: HomeView, meta: { requiresAuth: true } },
-  { path: '/payment', name: 'payment', component: PaymentPage, meta: { requiresAuth: true } },
+  {
+    path: '/transactions',
+    name: 'transactions',
+    component: PaymentPage,
+    meta: { requiresAuth: true },
+  },
   { path: '/login', name: 'login', component: LoginPage },
   {
     path: '/bills/:id',

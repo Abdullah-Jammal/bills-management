@@ -190,7 +190,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="w-[90%] mx-auto py-10">
+  <div class="w-[95%] mx-auto py-10">
     <div class="text-left text-md text-gray-600 mb-2">
       Logged in as: <span class="font-semibold">{{ userEmail }}</span>
     </div>

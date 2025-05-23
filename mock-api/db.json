@@ -172,13 +172,12 @@
       "amount": 150
     },
     {
-      "id": 5,
-      "billId": 6,
-      "billNumber": "BILL-006",
-      "receiver": "Receiver 6",
-      "station": "Station F",
-      "paymentDate": "2025-05-14",
-      "amount": 230
+      "billId": 1,
+      "paymentDate": "2025-06-07",
+      "amount": 350,
+      "receiver": "test",
+      "station": "test station",
+      "id": 5
     },
     {
       "id": 6,
@@ -215,6 +214,28 @@
       "station": "Station I",
       "paymentDate": "2025-05-19",
       "amount": 170
+    },
+    {
+      "billId": 1,
+      "paymentDate": "2025-05-21",
+      "amount": 200,
+      "id": 10
+    },
+    {
+      "billId": 1,
+      "paymentDate": "2025-05-21",
+      "amount": 150,
+      "station": "NEW STATION",
+      "receiver": "Abdullah Ahmed",
+      "id": 11
+    },
+    {
+      "billId": 2,
+      "paymentDate": "2025-05-06",
+      "amount": 250,
+      "station": "Ta3leem",
+      "receiver": "Abdullah Jamal",
+      "id": 13
     }
   ]
 }

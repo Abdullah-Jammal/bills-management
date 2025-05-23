@@ -16,7 +16,7 @@ import { useAuthStore } from '@/stores/auth'
 
 const items = [
   { title: 'Home', url: '/', icon: Home },
-  { title: 'Transactions', url: '/payment', icon: HandCoins },
+  { title: 'Transactions', url: '/transactions', icon: HandCoins },
 ]
 
 const auth = useAuthStore()
@@ -26,7 +26,7 @@ const auth = useAuthStore()
     <SidebarContent>
       <SidebarGroup>
         <SidebarGroupLabel>Bills Management System</SidebarGroupLabel>
-        <SidebarGroupContent class="flex flex-col justify-between h-[94vh]">
+        <SidebarGroupContent class="flex flex-col justify-between h-[90vh]">
           <SidebarMenu>
             <SidebarMenuItem v-for="item in items" :key="item.title">
               <SidebarMenuButton asChild>

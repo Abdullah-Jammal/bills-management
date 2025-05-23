@@ -16,7 +16,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
-import UpdateBillDialog from '../form/UpdateBillDialog.vue'
+import UpdateTransactionForm from '../transaction/UpdateTransactionForm.vue'
 import axios from 'axios'
 import { ArrowBigLeft, ArrowBigRight } from 'lucide-vue-next'
 
@@ -29,15 +29,23 @@ const props = defineProps({
 })
 
 async function handleDelete(id) {
-  await axios.delete(`http://localhost:3001/bills/${id}`)
+  try {
+    await axios.delete(`http://localhost:3001/transactions/${id}`)
+  } catch (err) {
+    console.error('Failed to delete transaction:', err)
+  }
 }
 
 async function handleSave(id, updated) {
-  await axios.put(`http://localhost:3001/bills/${id}`, updated)
+  try {
+    await axios.put(`http://localhost:3001/transactions/${id}`, updated)
+  } catch (err) {
+    console.error('Failed to update transaction:', err)
+  }
 }
 
 const emit = defineEmits(['update:page'])
-const columns = createColumns(UpdateBillDialog, handleDelete, handleSave)
+const columns = createColumns(UpdateTransactionForm, handleDelete, handleSave)
 
 const table = useVueTable({
   get data() {
