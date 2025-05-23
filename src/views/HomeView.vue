@@ -1,10 +1,10 @@
 <script setup>
-import { ref, watch, computed } from 'vue'
+import { ref, watch, computed, onMounted } from 'vue'
 import axios from 'axios'
 import DataTable from '../components/payments/data-table.vue'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { CalendarIcon } from 'lucide-vue-next'
+import { CalendarIcon, PlusCircle } from 'lucide-vue-next'
 import { cn } from '@/lib/utils'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { RangeCalendar } from '@/components/ui/range-calendar'
@@ -175,10 +175,26 @@ const onSubmit = handleSubmit(async (values) => {
     console.error('❌ Failed to create bill:', err)
   }
 })
+const userEmail = ref('')
+
+onMounted(() => {
+  const user = localStorage.getItem('authUser')
+  if (user) {
+    try {
+      const parsedUser = JSON.parse(user)
+      userEmail.value = parsedUser.email || ''
+    } catch (e) {
+      console.error('Invalid authUser JSON:', e)
+    }
+  }
+})
 </script>
 
 <template>
   <div class="w-[90%] mx-auto py-10">
+    <div class="text-left text-md text-gray-600 mb-2">
+      Logged in as: <span class="font-semibold">{{ userEmail }}</span>
+    </div>
     <div
       class="flex flex-wrap justify-between items-center mb-6 bg-white px-6 py-5 rounded-md gap-4"
     >
@@ -265,7 +281,7 @@ const onSubmit = handleSubmit(async (values) => {
       <!-- Create Bill Button -->
       <Dialog>
         <DialogTrigger>
-          <Button class="bg-orange-500 w-48">Create Bill</Button>
+          <Button class="bg-orange-500 w-48 rounded-xs"><PlusCircle /> Create Bill</Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>

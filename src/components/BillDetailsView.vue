@@ -23,7 +23,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="p-6 max-w-6xl mx-auto">
+  <div class="p-12 w-[80%]">
     <h1 class="text-3xl font-bold mb-6 text-gray-800">🧾 Bill Details</h1>
 
     <div v-if="isLoading" class="text-gray-500">Loading...</div>

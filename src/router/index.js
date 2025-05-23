@@ -10,6 +10,7 @@ const routes = [
   {
     path: '/bills/:id',
     name: 'BillDetails',
+    meta: { requiresAuth: true },
     component: () => import('../components/BillDetailsView.vue'),
   },
 ]
