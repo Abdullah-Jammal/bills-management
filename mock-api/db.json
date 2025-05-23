@@ -13,180 +13,208 @@
   ],
   "bills": [
     {
+      "id": 1,
+      "billNumber": "BILL-001",
+      "receiver": "John Doe",
+      "station": "Station X",
+      "amount": 450,
+      "issuedDate": "2025-05-01",
+      "executionDate": "2025-05-10",
+      "status": "executed",
+      "isPaid": true
+    },
+    {
       "id": 2,
       "billNumber": "BILL-002",
-      "receiver": "Receiver 2",
-      "amount": 250,
-      "isPaid": false,
-      "status": "pending",
-      "issuedDate": "2025-05-01",
-      "executionDate": "2025-05-22",
-      "station": "Station A"
+      "receiver": "Jane Smith",
+      "station": "Station Y",
+      "amount": 200,
+      "issuedDate": "2025-05-03",
+      "executionDate": "2025-05-12",
+      "status": "executed",
+      "isPaid": true
     },
     {
       "id": 3,
       "billNumber": "BILL-003",
-      "receiver": "Receiver 3",
-      "amount": 505,
-      "isPaid": true,
-      "status": "executed",
+      "receiver": "Alice Johnson",
+      "station": "Station Z",
+      "amount": 320,
+      "issuedDate": "2025-05-04",
+      "executionDate": "2025-05-14",
+      "status": "pending",
+      "isPaid": false
+    },
+    {
+      "id": 4,
+      "billNumber": "BILL-004",
+      "receiver": "Bob Lee",
+      "station": "Station A",
+      "amount": 150,
       "issuedDate": "2025-05-05",
-      "executionDate": "2025-05-11",
-      "station": "Station B"
+      "executionDate": "2025-05-15",
+      "status": "executed",
+      "isPaid": true
     },
     {
       "id": 5,
       "billNumber": "BILL-005",
-      "receiver": "Receiver 5",
-      "amount": 1500,
-      "isPaid": false,
+      "receiver": "Charlie Kim",
+      "station": "Station B",
+      "amount": 0,
+      "issuedDate": "2025-05-06",
+      "executionDate": "2025-05-16",
       "status": "pending",
-      "issuedDate": "2025-05-07",
-      "executionDate": "2025-05-18",
-      "station": "Station C"
+      "isPaid": false
     },
     {
+      "id": 6,
       "billNumber": "BILL-006",
-      "receiver": "Receiver 6",
-      "station": "Station 12",
-      "amount": 205,
-      "issuedDate": "2025-05-10",
-      "executionDate": "2025-05-31",
+      "receiver": "Dana White",
+      "station": "Station C",
+      "amount": 230,
+      "issuedDate": "2025-05-07",
+      "executionDate": "2025-05-17",
       "status": "executed",
-      "isPaid": true,
-      "id": 6
+      "isPaid": true
     },
     {
       "id": 7,
       "billNumber": "BILL-007",
-      "receiver": "Receiver 7",
-      "amount": 700,
-      "isPaid": false,
-      "status": "executed",
-      "issuedDate": "2025-05-13",
-      "executionDate": "2025-05-28",
-      "station": "Station D"
+      "receiver": "Eva Green",
+      "station": "Station D",
+      "amount": 180,
+      "issuedDate": "2025-05-08",
+      "executionDate": "2025-05-18",
+      "status": "pending",
+      "isPaid": false
     },
     {
       "id": 8,
       "billNumber": "BILL-008",
-      "receiver": "Receiver 8",
-      "amount": 1,
-      "isPaid": true,
+      "receiver": "Frank Ocean",
+      "station": "Station E",
+      "amount": 600,
+      "issuedDate": "2025-05-09",
+      "executionDate": "2025-05-19",
       "status": "executed",
-      "issuedDate": "2025-05-14",
-      "executionDate": "2025-05-21",
-      "station": "Station E"
+      "isPaid": true
     },
     {
       "id": 9,
       "billNumber": "BILL-009",
-      "receiver": "Receiver 9",
-      "amount": 1000,
-      "isPaid": false,
-      "status": "pending",
-      "issuedDate": "2025-05-15",
-      "executionDate": "2025-05-24",
-      "station": "Station F"
+      "receiver": "Grace Park",
+      "station": "Station F",
+      "amount": 270,
+      "issuedDate": "2025-05-10",
+      "executionDate": "2025-05-20",
+      "status": "executed",
+      "isPaid": true
     },
     {
       "id": 10,
       "billNumber": "BILL-010",
-      "receiver": "Receiver 10",
-      "amount": 11,
-      "isPaid": true,
+      "receiver": "Henry Ford",
+      "station": "Station G",
+      "amount": 0,
+      "issuedDate": "2025-05-11",
+      "executionDate": "2025-05-21",
       "status": "pending",
-      "issuedDate": "2025-05-16",
-      "executionDate": "2025-05-22",
-      "station": "Station A"
-    },
-    {
-      "billNumber": "879821983",
-      "receiver": "Ahmed",
-      "station": "Station 22",
-      "amount": 300,
-      "issuedDate": "2025-05-14",
-      "executionDate": "2025-05-31",
-      "status": "executed",
-      "isPaid": false,
-      "id": 12
-    },
-    {
-      "billNumber": "321321",
-      "receiver": "Receiver 6",
-      "station": "Station 22",
-      "amount": 11,
-      "issuedDate": "2025-05-23",
-      "executionDate": "2025-05-31",
-      "status": "pending",
-      "isPaid": false,
-      "id": 13
+      "isPaid": false
     },
     {
       "billNumber": "321871",
       "receiver": "Abdullah",
-      "station": "Station 24",
-      "amount": 44,
-      "issuedDate": "2025-05-13",
-      "executionDate": "2025-05-28",
-      "status": "pending",
-      "isPaid": true,
-      "id": 14
-    },
-    {
-      "billNumber": "321321",
-      "receiver": "Receiver 6",
-      "station": "Station 22",
-      "amount": 32,
-      "issuedDate": "2025-05-06",
-      "executionDate": "2025-05-31",
-      "status": "pending",
-      "isPaid": false,
-      "id": 15
-    },
-    {
-      "billNumber": "321321",
-      "receiver": "Abdullah",
-      "station": "Station 22",
-      "amount": 32,
-      "issuedDate": "2025-05-01",
-      "executionDate": "2025-06-07",
-      "status": "pending",
-      "isPaid": false,
-      "id": 16
-    },
-    {
-      "billNumber": "321321",
-      "receiver": "Abdullah",
       "station": "Station 12",
-      "amount": 32,
-      "issuedDate": "2025-05-14",
-      "executionDate": "2025-05-13",
-      "status": "pending",
+      "amount": 100,
+      "issuedDate": "2025-05-22",
+      "executionDate": "2025-05-24",
+      "status": "executed",
       "isPaid": false,
-      "id": 17
+      "id": 11
+    }
+  ],
+  "transactions": [
+    {
+      "id": 1,
+      "billId": 1,
+      "billNumber": "BILL-001",
+      "receiver": "Receiver 1",
+      "station": "Station A",
+      "paymentDate": "2025-05-05",
+      "amount": 200
     },
     {
-      "billNumber": "321321",
-      "receiver": "Receiver 6",
-      "station": "Station 12",
-      "amount": 321,
-      "issuedDate": "2025-05-23",
-      "executionDate": "2025-05-11",
-      "status": "pending",
-      "isPaid": false,
-      "id": 18
+      "id": 2,
+      "billId": 1,
+      "billNumber": "BILL-001",
+      "receiver": "Receiver 1",
+      "station": "Station A",
+      "paymentDate": "2025-05-08",
+      "amount": 250
     },
     {
-      "billNumber": "321321",
+      "id": 3,
+      "billId": 2,
+      "billNumber": "BILL-002",
+      "receiver": "Receiver 2",
+      "station": "Station B",
+      "paymentDate": "2025-05-10",
+      "amount": 200
+    },
+    {
+      "id": 4,
+      "billId": 4,
+      "billNumber": "BILL-004",
+      "receiver": "Receiver 4",
+      "station": "Station D",
+      "paymentDate": "2025-05-12",
+      "amount": 150
+    },
+    {
+      "id": 5,
+      "billId": 6,
+      "billNumber": "BILL-006",
       "receiver": "Receiver 6",
-      "station": "Station 12",
-      "amount": 111,
-      "issuedDate": "2025-05-23",
-      "executionDate": "2025-05-31",
-      "status": "pending",
-      "isPaid": false,
-      "id": 19
+      "station": "Station F",
+      "paymentDate": "2025-05-14",
+      "amount": 230
+    },
+    {
+      "id": 6,
+      "billId": 8,
+      "billNumber": "BILL-008",
+      "receiver": "Receiver 8",
+      "station": "Station H",
+      "paymentDate": "2025-05-15",
+      "amount": 400
+    },
+    {
+      "id": 7,
+      "billId": 8,
+      "billNumber": "BILL-008",
+      "receiver": "Receiver 8",
+      "station": "Station H",
+      "paymentDate": "2025-05-17",
+      "amount": 200
+    },
+    {
+      "id": 8,
+      "billId": 9,
+      "billNumber": "BILL-009",
+      "receiver": "Receiver 9",
+      "station": "Station I",
+      "paymentDate": "2025-05-18",
+      "amount": 100
+    },
+    {
+      "id": 9,
+      "billId": 9,
+      "billNumber": "BILL-009",
+      "receiver": "Receiver 9",
+      "station": "Station I",
+      "paymentDate": "2025-05-19",
+      "amount": 170
     }
   ]
 }

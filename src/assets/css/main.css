@@ -150,7 +150,13 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.dialog-content {
+  max-width: 100% !important;
+  width: 50vw;
 }

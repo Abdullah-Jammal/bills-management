@@ -14,6 +14,14 @@ import { useForm } from 'vee-validate'
 import { z } from 'zod'
 import { toTypedSchema } from '@vee-validate/zod'
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { watch } from 'vue'
 
 const props = defineProps({
@@ -58,16 +66,17 @@ const onSubmit = handleSubmit(async (values) => {
         <FolderCog />
       </Button>
     </DialogTrigger>
-    <DialogContent>
+    <DialogContent class="dialog-content">
       <DialogHeader>
         <DialogTitle>Update Bill</DialogTitle>
         <DialogDescription>Edit and save the bill information.</DialogDescription>
       </DialogHeader>
-      <form @submit.prevent="onSubmit" class="space-y-4">
+
+      <form @submit.prevent="onSubmit" class="space-y-4 mt-4">
         <FormField v-slot="{ componentField }" name="billNumber">
           <FormItem>
             <FormLabel>Bill Number</FormLabel>
-            <FormControl><Input type="text" v-bind="componentField" /></FormControl>
+            <FormControl><Input v-bind="componentField" /></FormControl>
             <FormMessage />
           </FormItem>
         </FormField>
@@ -75,7 +84,7 @@ const onSubmit = handleSubmit(async (values) => {
         <FormField v-slot="{ componentField }" name="receiver">
           <FormItem>
             <FormLabel>Receiver</FormLabel>
-            <FormControl><Input type="text" v-bind="componentField" /></FormControl>
+            <FormControl><Input v-bind="componentField" /></FormControl>
             <FormMessage />
           </FormItem>
         </FormField>
@@ -83,7 +92,7 @@ const onSubmit = handleSubmit(async (values) => {
         <FormField v-slot="{ componentField }" name="station">
           <FormItem>
             <FormLabel>Station</FormLabel>
-            <FormControl><Input type="text" v-bind="componentField" /></FormControl>
+            <FormControl><Input v-bind="componentField" /></FormControl>
             <FormMessage />
           </FormItem>
         </FormField>
@@ -112,25 +121,40 @@ const onSubmit = handleSubmit(async (values) => {
           </FormItem>
         </FormField>
 
+        <!-- ✅ Updated status field as Select -->
         <FormField v-slot="{ componentField }" name="status">
           <FormItem>
             <FormLabel>Status</FormLabel>
-            <FormControl><Input v-bind="componentField" /></FormControl>
+            <FormControl>
+              <Select v-bind="componentField">
+                <SelectTrigger class="w-full">
+                  <SelectValue placeholder="Select status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="pending">Pending</SelectItem>
+                    <SelectItem value="executed">Executed</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </FormControl>
             <FormMessage />
           </FormItem>
         </FormField>
 
         <FormField v-slot="{ componentField }" name="isPaid">
           <FormItem>
-            <FormLabel>Is Paid?</FormLabel>
-            <FormControl>
-              <input type="checkbox" v-bind="componentField" />
-            </FormControl>
+            <div class="flex items-center gap-3">
+              <FormLabel>is paid : </FormLabel>
+              <FormControl>
+                <input type="checkbox" class="h-4 w-4" v-bind="componentField" />
+              </FormControl>
+            </div>
             <FormMessage />
           </FormItem>
         </FormField>
 
-        <Button type="submit" class="w-full bg-blue-600">Save Changes</Button>
+        <Button type="submit" class="w-52 mt-6 bg-orange-500 cursor-pointer">Save Changes</Button>
       </form>
     </DialogContent>
   </Dialog>

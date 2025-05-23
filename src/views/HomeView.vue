@@ -4,7 +4,7 @@ import axios from 'axios'
 import DataTable from '../components/payments/data-table.vue'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { CalendarIcon, PlusCircle } from 'lucide-vue-next'
+import { CalendarIcon, PlusCircle, BrushCleaning } from 'lucide-vue-next'
 import { cn } from '@/lib/utils'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { RangeCalendar } from '@/components/ui/range-calendar'
@@ -17,6 +17,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
+import { Search } from 'lucide-vue-next'
 import {
   Select,
   SelectContent,
@@ -122,12 +123,10 @@ async function getData() {
 
     if (selectedDateRange.value) {
       const { start, end } = selectedDateRange.value
+
       filtered = filtered.filter((b) => {
-        const issued = b.issuedDate?.slice(0, 10)
         const exec = b.executionDate?.slice(0, 10)
-        return (
-          (issued && issued >= start && issued <= end) || (exec && exec >= start && exec <= end)
-        )
+        return exec && exec >= start && exec <= end
       })
     }
 
@@ -200,15 +199,19 @@ onMounted(() => {
     >
       <div class="flex flex-col gap-6">
         <div class="flex gap-6">
-          <Input
-            v-model="searchQuery"
-            class="w-96"
-            placeholder="Search bill number or receiver..."
-          />
+          <div class="relative w-96">
+            <Input
+              v-model="searchQuery"
+              placeholder="Search bill number or receiver..."
+              class="pl-3 w-full"
+            />
+            <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
+              <Search class="w-4 h-4" />
+            </span>
+          </div>
         </div>
 
         <div class="flex gap-6 items-center">
-          <!-- Status Filter -->
           <Select v-model="filterStatus">
             <SelectTrigger class="w-48">
               <span class="text-gray-500" v-if="filterStatus === 'all'">Filter by Bill Status</span>
@@ -223,7 +226,6 @@ onMounted(() => {
             </SelectContent>
           </Select>
 
-          <!-- Paid Filter -->
           <Select v-model="filterPaid">
             <SelectTrigger class="w-52">
               <span class="text-gray-500" v-if="filterPaid === 'all'">Filter by Paid Status</span>
@@ -238,7 +240,6 @@ onMounted(() => {
             </SelectContent>
           </Select>
 
-          <!-- Date Range Picker -->
           <Popover>
             <PopoverTrigger as-child>
               <Button
@@ -260,7 +261,7 @@ onMounted(() => {
                     {{ df.format(value.start.toDate(getLocalTimeZone())) }}
                   </template>
                 </template>
-                <template v-else> Pick a date </template>
+                <template v-else class="text-gray-300"> filter by execution date </template>
               </Button>
             </PopoverTrigger>
             <PopoverContent class="w-auto p-0">
@@ -270,64 +271,74 @@ onMounted(() => {
                 :number-of-months="2"
                 @update:start-value="(startDate) => (value.start = startDate)"
               />
-              <div class="p-2 flex justify-end border-t">
-                <Button size="sm" variant="ghost" @click="clearDateRange">Clear</Button>
+              <div class="p-3 flex justify-end border-t">
+                <Button
+                  size="sm"
+                  class="border-2 bg-orange-500 cursor-pointer"
+                  @click="clearDateRange"
+                  >Clear <BrushCleaning
+                /></Button>
               </div>
             </PopoverContent>
           </Popover>
         </div>
       </div>
 
-      <!-- Create Bill Button -->
       <Dialog>
         <DialogTrigger>
-          <Button class="bg-orange-500 w-48 rounded-xs"><PlusCircle /> Create Bill</Button>
+          <Button class="bg-orange-500 w-48 rounded-xs cursor-pointer"
+            ><PlusCircle /> Create Bill</Button
+          >
         </DialogTrigger>
-        <DialogContent>
+        <DialogContent class="dialog-content">
           <DialogHeader>
             <DialogTitle>Create a new bill</DialogTitle>
             <DialogDescription>Fill in the details</DialogDescription>
           </DialogHeader>
           <form @submit.prevent="onSubmit" class="space-y-4 mt-4">
-            <FormField v-slot="{ componentField }" name="billNumber">
-              <FormItem>
-                <FormLabel>Bill Number</FormLabel>
-                <FormControl>
-                  <Input v-bind="componentField" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            </FormField>
+            <div class="flex gap-6">
+              <FormField v-slot="{ componentField }" name="billNumber">
+                <FormItem class="flex-grow">
+                  <FormLabel>Bill Number</FormLabel>
+                  <FormControl>
+                    <Input v-bind="componentField" class="rounded-xs" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              </FormField>
 
-            <FormField v-slot="{ componentField }" name="receiver">
-              <FormItem>
-                <FormLabel>Receiver</FormLabel>
-                <FormControl>
-                  <Input v-bind="componentField" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            </FormField>
+              <FormField v-slot="{ componentField }" name="receiver">
+                <FormItem class="flex-grow">
+                  <FormLabel>Receiver</FormLabel>
+                  <FormControl>
+                    <Input v-bind="componentField" class="rounded-xs" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              </FormField>
+            </div>
 
-            <FormField v-slot="{ componentField }" name="station">
-              <FormItem>
-                <FormLabel>Station</FormLabel>
-                <FormControl>
-                  <Input v-bind="componentField" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            </FormField>
+            <div class="flex gap-6">
+              <FormField v-slot="{ componentField }" name="station">
+                <FormItem class="flex-grow">
+                  <FormLabel>Station</FormLabel>
+                  <FormControl>
+                    <Input v-bind="componentField" class="rounded-xs" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              </FormField>
 
-            <FormField v-slot="{ componentField }" name="amount">
-              <FormItem>
-                <FormLabel>Amount</FormLabel>
-                <FormControl>
-                  <Input type="number" v-bind="componentField" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            </FormField>
+              <FormField v-slot="{ componentField }" name="amount">
+                <FormItem class="flex-grow">
+                  <FormLabel>Amount</FormLabel>
+                  <FormControl>
+                    <Input type="number" v-bind="componentField" class="rounded-xs" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              </FormField>
+            </div>
 
             <FormField v-slot="{ componentField }" name="issuedDate">
               <FormItem>
@@ -349,43 +360,44 @@ onMounted(() => {
               </FormItem>
             </FormField>
 
-            <FormField v-slot="{ componentField }" name="status">
-              <FormItem>
-                <FormLabel>Status</FormLabel>
-                <FormControl>
-                  <Select v-bind="componentField">
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="pending">Pending</SelectItem>
-                      <SelectItem value="executed">Executed</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            </FormField>
-
-            <FormField v-slot="{ componentField }" name="isPaid">
-              <FormItem>
-                <div class="flex items-center gap-3">
-                  <FormLabel>Is Paid?</FormLabel>
+            <div class="flex gap-6 items-center">
+              <FormField v-slot="{ componentField }" name="status">
+                <FormItem class="flex-grow">
+                  <FormLabel>Status</FormLabel>
                   <FormControl>
-                    <input type="checkbox" class="h-4 w-4" v-bind="componentField" />
+                    <Select v-bind="componentField">
+                      <SelectTrigger class="w-full">
+                        <SelectValue placeholder="Select status" />
+                      </SelectTrigger>
+                      <SelectContent class="w-full">
+                        <SelectItem value="pending">Pending</SelectItem>
+                        <SelectItem value="executed">Executed</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </FormControl>
-                </div>
-                <FormMessage />
-              </FormItem>
-            </FormField>
+                  <FormMessage />
+                </FormItem>
+              </FormField>
 
-            <Button type="submit" class="w-full bg-orange-500">Submit</Button>
+              <FormField v-slot="{ componentField }" name="isPaid">
+                <FormItem class="flex-grow mt-4">
+                  <div class="flex items-center gap-3">
+                    <FormLabel>is paid : </FormLabel>
+                    <FormControl>
+                      <input type="checkbox" class="h-4 w-4" v-bind="componentField" />
+                    </FormControl>
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              </FormField>
+            </div>
+
+            <Button type="submit" class="w-52 mt-6 bg-orange-500">Create</Button>
           </form>
         </DialogContent>
       </Dialog>
     </div>
 
-    <!-- Statistics Section -->
     <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8 text-sm font-medium">
       <div class="bg-white border p-4 rounded-md text-center">
         <p>Total Bills</p>
@@ -409,7 +421,6 @@ onMounted(() => {
       </div>
     </div>
 
-    <!-- Data Table -->
     <DataTable
       :data="data"
       :page="page"
