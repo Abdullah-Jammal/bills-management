@@ -2,13 +2,10 @@
 import { ref, watch, computed, onMounted } from 'vue'
 import axios from 'axios'
 import DataTable from '../components/payments/data-table.vue'
-import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { CalendarIcon, PlusCircle, BrushCleaning } from 'lucide-vue-next'
-import { cn } from '@/lib/utils'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { RangeCalendar } from '@/components/ui/range-calendar'
-import { DateFormatter, getLocalTimeZone } from '@internationalized/date'
+import { getLocalTimeZone } from '@internationalized/date'
+import { PlusCircle } from 'lucide-vue-next'
+import { fetchBills } from '@/utils/fetchBills'
 import {
   Dialog,
   DialogContent,
@@ -17,21 +14,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { Search } from 'lucide-vue-next'
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+import BillFilters from '@/components/payments/BillFilters.vue'
+import Statistics from '@/components/payments/Statistics.vue'
+
 import { useForm } from 'vee-validate'
 import { schema } from '@/types/schema'
 import { toTypedSchema } from '@vee-validate/zod'
-import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form'
-
-const df = new DateFormatter('en-US', { dateStyle: 'medium' })
+import CreateBillForm from '@/components/form/CreateBillForm.vue'
 
 const value = ref({ start: null, end: null })
 
@@ -44,10 +33,6 @@ const selectedDateRange = computed(() => {
     end: endDate.toISOString().split('T')[0],
   }
 })
-
-function clearDateRange() {
-  value.value = { start: null, end: null }
-}
 
 const searchQuery = ref('')
 const debouncedSearchQuery = ref('')
@@ -89,48 +74,23 @@ async function getData() {
 
   try {
     const token = localStorage.getItem('accessToken')
-    const res = await axios.get('http://localhost:3001/bills', {
-      headers: { Authorization: `Bearer ${token}` },
+    const {
+      paginated,
+      totalPages,
+      stats: resultStats,
+    } = await fetchBills({
+      token,
+      page: page.value,
+      pageSize: pageSize.value,
+      search: debouncedSearchQuery.value,
+      status: filterStatus.value,
+      paid: filterPaid.value,
+      dateRange: selectedDateRange.value,
     })
 
-    let filtered = res.data
-
-    if (debouncedSearchQuery.value) {
-      const q = debouncedSearchQuery.value.toLowerCase()
-      filtered = filtered.filter(
-        (b) => b.billNumber?.toLowerCase().includes(q) || b.receiver?.toLowerCase().includes(q),
-      )
-    }
-
-    if (filterPaid.value !== 'all') {
-      filtered = filtered.filter((b) => b.isPaid === (filterPaid.value === 'true'))
-    }
-
-    if (filterStatus.value !== 'all') {
-      filtered = filtered.filter((b) => b.status === filterStatus.value)
-    }
-
-    if (selectedDateRange.value) {
-      const { start, end } = selectedDateRange.value
-
-      filtered = filtered.filter((b) => {
-        const exec = b.executionDate?.slice(0, 10)
-        return exec && exec >= start && exec <= end
-      })
-    }
-
-    const startIndex = (page.value - 1) * pageSize.value
-    const endIndex = startIndex + pageSize.value
-    data.value = filtered.slice(startIndex, endIndex)
-    pageCount.value = Math.ceil(filtered.length / pageSize.value)
-
-    stats.value.total = res.data.length
-    stats.value.paidAmount = res.data.filter((b) => b.isPaid).reduce((sum, b) => sum + b.amount, 0)
-    stats.value.unpaidAmount = res.data
-      .filter((b) => !b.isPaid)
-      .reduce((sum, b) => sum + b.amount, 0)
-    stats.value.executed = res.data.filter((b) => b.status === 'executed').length
-    stats.value.pending = res.data.filter((b) => b.status === 'pending').length
+    data.value = paginated
+    pageCount.value = totalPages
+    stats.value = resultStats
   } catch (err) {
     isError.value = true
     console.error('❌ Failed to fetch data:', err)
@@ -186,92 +146,13 @@ onMounted(() => {
     <div
       class="flex flex-wrap justify-between items-center mb-6 bg-white px-6 py-5 rounded-md gap-4"
     >
-      <div class="flex flex-col gap-6">
-        <div class="flex gap-6">
-          <div class="relative w-96">
-            <Input
-              v-model="searchQuery"
-              placeholder="Search bill number or receiver..."
-              class="pl-3 w-full"
-            />
-            <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
-              <Search class="w-4 h-4" />
-            </span>
-          </div>
-        </div>
-
-        <div class="flex gap-6 flex-wrap items-center">
-          <Select v-model="filterStatus">
-            <SelectTrigger class="w-48">
-              <span class="text-gray-500" v-if="filterStatus === 'all'">Filter by Bill Status</span>
-              <SelectValue v-else />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem value="all">All</SelectItem>
-                <SelectItem value="pending">Pending</SelectItem>
-                <SelectItem value="executed">Executed</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-
-          <Select v-model="filterPaid">
-            <SelectTrigger class="w-52">
-              <span class="text-gray-500" v-if="filterPaid === 'all'">Filter by Paid Status</span>
-              <SelectValue v-else />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem value="all">All</SelectItem>
-                <SelectItem value="true">Paid</SelectItem>
-                <SelectItem value="false">Unpaid</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-
-          <Popover>
-            <PopoverTrigger as-child>
-              <Button
-                variant="outline"
-                :class="
-                  cn(
-                    'w-[280px] justify-start text-left font-normal text-gray-500',
-                    !value && 'text-muted-foreground',
-                  )
-                "
-              >
-                <CalendarIcon class="mr-2 h-4 w-4" />
-                <template v-if="value.start">
-                  <template v-if="value.end">
-                    {{ df.format(value.start.toDate(getLocalTimeZone())) }} -
-                    {{ df.format(value.end.toDate(getLocalTimeZone())) }}
-                  </template>
-                  <template v-else>
-                    {{ df.format(value.start.toDate(getLocalTimeZone())) }}
-                  </template>
-                </template>
-                <template v-else> filter by execution date </template>
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent class="w-auto p-0">
-              <RangeCalendar
-                v-model="value"
-                initial-focus
-                :number-of-months="2"
-                @update:start-value="(startDate) => (value.start = startDate)"
-              />
-              <div class="p-3 flex justify-end border-t">
-                <Button
-                  size="sm"
-                  class="border-2 bg-orange-500 cursor-pointer"
-                  @click="clearDateRange"
-                  >Clear <BrushCleaning
-                /></Button>
-              </div>
-            </PopoverContent>
-          </Popover>
-        </div>
-      </div>
+      <BillFilters
+        :stats="stats"
+        v-model:searchQuery="searchQuery"
+        v-model:filterStatus="filterStatus"
+        v-model:filterPaid="filterPaid"
+        v-model:dateRange="value"
+      />
 
       <Dialog>
         <DialogTrigger>
@@ -284,131 +165,12 @@ onMounted(() => {
             <DialogTitle>Create a new bill</DialogTitle>
             <DialogDescription>Fill in the details</DialogDescription>
           </DialogHeader>
-          <form @submit.prevent="onSubmit" class="space-y-4 mt-4">
-            <div class="flex gap-6">
-              <FormField v-slot="{ componentField }" name="billNumber">
-                <FormItem class="flex-grow">
-                  <FormLabel>Bill Number</FormLabel>
-                  <FormControl>
-                    <Input v-bind="componentField" class="rounded-xs" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              </FormField>
-
-              <FormField v-slot="{ componentField }" name="receiver">
-                <FormItem class="flex-grow">
-                  <FormLabel>Receiver</FormLabel>
-                  <FormControl>
-                    <Input v-bind="componentField" class="rounded-xs" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              </FormField>
-            </div>
-
-            <div class="flex gap-6">
-              <FormField v-slot="{ componentField }" name="station">
-                <FormItem class="flex-grow">
-                  <FormLabel>Station</FormLabel>
-                  <FormControl>
-                    <Input v-bind="componentField" class="rounded-xs" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              </FormField>
-
-              <FormField v-slot="{ componentField }" name="amount">
-                <FormItem class="flex-grow">
-                  <FormLabel>Amount</FormLabel>
-                  <FormControl>
-                    <Input type="number" v-bind="componentField" class="rounded-xs" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              </FormField>
-            </div>
-
-            <FormField v-slot="{ componentField }" name="issuedDate">
-              <FormItem>
-                <FormLabel>Issued Date</FormLabel>
-                <FormControl>
-                  <Input type="date" v-bind="componentField" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            </FormField>
-
-            <FormField v-slot="{ componentField }" name="executionDate">
-              <FormItem>
-                <FormLabel>Execution Date</FormLabel>
-                <FormControl>
-                  <Input type="date" v-bind="componentField" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            </FormField>
-
-            <div class="flex gap-6 items-center">
-              <FormField v-slot="{ componentField }" name="status">
-                <FormItem class="flex-grow">
-                  <FormLabel>Status</FormLabel>
-                  <FormControl>
-                    <Select v-bind="componentField">
-                      <SelectTrigger class="w-full">
-                        <SelectValue placeholder="Select status" />
-                      </SelectTrigger>
-                      <SelectContent class="w-full">
-                        <SelectItem value="pending">Pending</SelectItem>
-                        <SelectItem value="executed">Executed</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              </FormField>
-
-              <FormField v-slot="{ componentField }" name="isPaid">
-                <FormItem class="flex-grow mt-4">
-                  <div class="flex items-center gap-3">
-                    <FormLabel>is paid : </FormLabel>
-                    <FormControl>
-                      <input type="checkbox" class="h-4 w-4" v-bind="componentField" />
-                    </FormControl>
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              </FormField>
-            </div>
-
-            <Button type="submit" class="w-52 mt-6 bg-orange-500">Create</Button>
-          </form>
+          <CreateBillForm @submit="onSubmit" />
         </DialogContent>
       </Dialog>
     </div>
 
-    <div class="grid lg:grid-cols-5 md:grid-cols-2 gap-4 mb-8 text-sm font-medium">
-      <div class="bg-white border p-4 rounded-md text-center">
-        <p>Total Bills</p>
-        <h2 class="text-xl font-bold text-blue-500">{{ stats.total }}</h2>
-      </div>
-      <div class="bg-white border p-4 rounded-md text-center">
-        <p>Paid Amount</p>
-        <h2 class="text-xl font-bold text-green-500">${{ stats.paidAmount }}</h2>
-      </div>
-      <div class="bg-white border p-4 rounded-md text-center">
-        <p>Unpaid Amount</p>
-        <h2 class="text-xl font-bold text-red-500">${{ stats.unpaidAmount }}</h2>
-      </div>
-      <div class="bg-white border p-4 rounded-md text-center">
-        <p>Executed Bills</p>
-        <h2 class="text-xl font-bold text-indigo-500">{{ stats.executed }}</h2>
-      </div>
-      <div class="bg-white border p-4 rounded-md text-center">
-        <p>Pending Bills</p>
-        <h2 class="text-xl font-bold text-yellow-500">{{ stats.pending }}</h2>
-      </div>
-    </div>
+    <Statistics :stats="stats" />
 
     <DataTable
       :data="data"
