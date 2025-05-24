@@ -11,8 +11,8 @@ export const useAuthStore = defineStore('auth', () => {
     user.value = authResponse.user
     isLoggedIn.value = true
 
-    localStorage.setItem('accessToken', authResponse.accessToken)
-    localStorage.setItem('authUser', JSON.stringify(authResponse.user))
+    localStorage.setItem('accessToken', token.value)
+    localStorage.setItem('authUser', JSON.stringify(user.value))
   }
 
   function logout() {

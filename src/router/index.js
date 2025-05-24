@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import LoginPage from '@/views/LoginPage.vue'
 import PaymentPage from '@/views/TransactionPage.vue'
+import BillDetailsView from '../components/BillDetailsView.vue'
 
 const routes = [
   { path: '/', name: 'home', component: HomeView, meta: { requiresAuth: true } },
@@ -16,7 +17,7 @@ const routes = [
     path: '/bills/:id',
     name: 'BillDetails',
     meta: { requiresAuth: true },
-    component: () => import('../components/BillDetailsView.vue'),
+    component: BillDetailsView,
   },
 ]
 

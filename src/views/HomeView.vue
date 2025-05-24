@@ -27,7 +27,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useForm } from 'vee-validate'
-import { z } from 'zod'
+import { schema } from '@/types/schema'
 import { toTypedSchema } from '@vee-validate/zod'
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form'
 
@@ -48,17 +48,6 @@ const selectedDateRange = computed(() => {
 function clearDateRange() {
   value.value = { start: null, end: null }
 }
-
-const schema = z.object({
-  billNumber: z.string().min(1, 'Required'),
-  receiver: z.string().min(1, 'Required'),
-  station: z.string().min(1, 'Required'),
-  amount: z.coerce.number().min(1, 'Must be positive'),
-  issuedDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Invalid date'),
-  executionDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Invalid date'),
-  status: z.enum(['pending', 'executed']),
-  isPaid: z.coerce.boolean(),
-})
 
 const searchQuery = ref('')
 const debouncedSearchQuery = ref('')
@@ -211,7 +200,7 @@ onMounted(() => {
           </div>
         </div>
 
-        <div class="flex gap-6 items-center">
+        <div class="flex gap-6 flex-wrap items-center">
           <Select v-model="filterStatus">
             <SelectTrigger class="w-48">
               <span class="text-gray-500" v-if="filterStatus === 'all'">Filter by Bill Status</span>
@@ -246,7 +235,7 @@ onMounted(() => {
                 variant="outline"
                 :class="
                   cn(
-                    'w-[280px] justify-start text-left font-normal',
+                    'w-[280px] justify-start text-left font-normal text-gray-500',
                     !value && 'text-muted-foreground',
                   )
                 "
@@ -261,7 +250,7 @@ onMounted(() => {
                     {{ df.format(value.start.toDate(getLocalTimeZone())) }}
                   </template>
                 </template>
-                <template v-else class="text-gray-300"> filter by execution date </template>
+                <template v-else> filter by execution date </template>
               </Button>
             </PopoverTrigger>
             <PopoverContent class="w-auto p-0">
@@ -398,7 +387,7 @@ onMounted(() => {
       </Dialog>
     </div>
 
-    <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8 text-sm font-medium">
+    <div class="grid lg:grid-cols-5 md:grid-cols-2 gap-4 mb-8 text-sm font-medium">
       <div class="bg-white border p-4 rounded-md text-center">
         <p>Total Bills</p>
         <h2 class="text-xl font-bold text-blue-500">{{ stats.total }}</h2>
